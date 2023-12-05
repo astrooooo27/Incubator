@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <title>Incubator Period and Schedules</title>
+  <link rel="stylesheet" href="gantchartstyle.css">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="refresh" content="5" > -->
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="static/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/static/css/main.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js" integrity="sha256-8zyeSXm+yTvzUN1VgAOinFgaVFEFTyYzWShOy9w7WoQ=" crossorigin="anonymous"></script>
+
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+<body class="w3-light-grey", onload="update_values;">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right"></span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+  <div class="w3-container">
+  <br>
+    <h5><b><i class="fa fa-dashboard"></i>Dashboard</b></h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-white w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="#my-header" class="w3-bar-item w3-button w3-padding"><i class="fa fa-calendar"></i> Incubator Period and Schedules</a>
+    <a href="/humid_temp" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bar-chart"></i> Humidity and Temperature</a>
+    <a href="/cleaning" class="w3-bar-item w3-button w3-padding"><i class="fas fa-broom"></i> Cleaning</a>
+    <a href="/candling" class="w3-bar-item w3-button w3-padding"><i class="fa fa-camera"></i> Candling</a>
+    <a href="/turning" class="w3-bar-item w3-button w3-padding"><i class="fa fa-refresh"></i> Turning</a>
+    <a href="/solar" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bolt"></i> Solar</a>
+    <a href="#my-footer" class="w3-bar-item w3-button w3-padding"><i class="fa fa-info-circle"></i> Description</a>
+    <a href="{{ url_for('login') }}">Logout</a>
+  </div>
+</nav>
+<div class="container page-container">
+  {% with message = get_flashed_messages()  %} 
+    {% if message %}
+      {% for msg in message %}
+        {% if category =='error' %}
+        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% else %}
+        <div class="alert alert-success alter-dismissable fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+<div class="container">{% block content %} {% endblock %}</div>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:20px;">
+
+  <!-- Header -->
+  <header id="my-header" class="w3-container" style="padding-top:10px">
+    <h5><i class="fa fa-calendar"></i><b> Incubator Period and Schedules</b></h5>
+  </header>
+  <script src=" "></script>
+  <script type="text/javascript"></script>
+<body>
+    <div class="w3-container">
+      <div class="w3-container w3-white w3-hover-shadow w3-padding-16">
+    <div class="chartCard">
+      <div class="chartBox" style="position: relative; width: 100%; height: 70vh;">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script>
+    // setup 
+    const data = {
+      datasets: [{
+        label: 'Incubator Period and Schedules',
+        data: [
+            {x: ['2023-11-15', '2023-11-20'], y: 'Deployment of Incubator'},
+            {x: ['2023-11-25', '2023-12-10'], y: 'Egg Turning'},
+            {x: ['2023-11-23', '2023-11-30'], y: 'Hygiene'},
+            {x: ['2023-11-25', '2023-11-26'], y: 'Candling'},
+            {x: ['2023-11-30', '2023-12-05'], y: 'Candling'},
+            {x: ['2023-12-05', '2023-12-10'], y: 'Cleaning'},
+            {x: ['2023-12-12', '2023-12-15'], y: 'Candling'},
+            {x: ['2023-12-16', '2023-12-20'], y: 'Egg Hatching'}
+        ],
+        backgroundColor: [
+          'rgba(255, 26, 104, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(255, 206, 86, 0.5)',
+          'rgba(75, 192, 192, 0.5)',
+          'rgba(153, 102, 255, 0.5)',
+          'rgba(255, 159, 64, 0.5)',
+          'rgb(66, 125, 157, 0.5)',
+          'rgb(169, 179, 136, 0.5)',
+          'rgb(38, 80, 115, 0.5)',
+          'rgb(210, 222, 50, 0.5)'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgb(66, 125, 157, 1)',
+          'rgb(169, 179, 136, 1)',
+          'rgb(38, 80, 115, 1)',
+          'rgb(210, 222, 50, 1)'
+        ],
+        borderWidth: 1.5,
+        borderSkipped: false,
+        borderRadius: 10,
+        barPercentage: 0.8
+      }]
+    };
+
+    // todayLine Plugin
+    const todayLine = {
+        id: 'todayLine',
+        afterDatasetsDraw(chart, args, pluginOptions){
+            const {ctx, data, chartArea: { top, bottom, left, right }, scales: {x, y}
+            } = chart;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+        ctx.setLineDash([6,6]);
+        ctx.moveTo(x.getPixelForValue(new Date()),top);
+        ctx.lineTo(x.getPixelForValue(new Date()),bottom);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.setLineDash([]);
+
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        ctx.moveTo(x.getPixelForValue(new Date()),top + 3);
+        ctx.lineTo(x.getPixelForValue(new Date()) - 6,top - 6);
+        ctx.lineTo(x.getPixelForValue(new Date()) + 6,top - 6);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+        ctx.textAlign = 'center';
+        ctx.fillText('Today', x.getPixelForValue(new Date()), bottom + 12)
+        }
+    }
+
+    // config 
+    const config = {
+      type: 'bar',
+      data,
+      options: {
+        layout: {
+          padding: {
+            bottom: 15,
+          },
+        },
+        indexAxis: 'y',
+        scales: {
+          x: {
+            position: 'top',
+            type: 'time',
+            time: {
+              unit: 'day',
+              tooltipFormat: 'MM DD, YYYY', // Customize the tooltip date format
+            },
+            min: new Date('2023-11-15'),
+            max: new Date('2023-12-20'),
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        maintainAspectRatio: false, // Set to false for responsiveness
+      },
+      plugins: [todayLine],
+    };
+
+    // render init block
+    document.addEventListener('DOMContentLoaded', () => {
+      const myChart = new Chart(document.getElementById('myChart'), config);
+    });
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+    chartVersion.innerText = Chart.version;
+    </script>
+</body>
+<footer id="my-footer">
+    <div class="w3-container">
+      <h5><i class="fa fa-info-circle"></i><b> Description</b></h5>
+    </div>
+    <div class="w3-row-padding w3-white w3-border-green w3-margin-left w3-leftbar" style="margin:0 -16px">
+      <div class="w3-third w3-padding-16">
+        <img src="/static/images/trees.svg" style="width:50%" alt="">
+      </div>
+      <div class="w3-twothird">
+        <h5><b>Incubation</b></h5>
+        <style>
+          p {
+            font-family: "Your Chosen Font", sans-serif;
+          }
+        </style>
+        <p>
+          The Automated Egg Incubator with AI and IoT aims to construct an intelligent smart incubator that limits human interaction in the incubation cycle to meet protein needs. In which farmers who have incubators face low productivity due to poor performance in their hatcheries that have human beings monitoring and controlling processes in incubation. Minimizing human contact in incubation can boost the income levels of smallholder farmers. Remote monitoring and control of the egg incubator parameters from a distant location may be cost-effective and efficient for bird reproduction in modern times. The abundant solar resources can eliminate the challenge of low access rates and unreliable power supply farmers face and guarantee income from hatcheries.
+        </p>
+      </div>
+    </div>
+  <br>
+  <div class="w3-container w3-dark-grey w3-padding-32">
+    <div class="w3-row">
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-green">Create by</h5>
+       <h6>PCEIT-03-701E</h6>
+       <h7>Class of 2022-2023</h7>
+      </div>
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-red">Guided by</h5>
+        <h6>Master Engineer Ronel Paglomutan</h6>
+      </div>
+      <div class="w3-container w3-third">
+        <h5 class="w3-bottombar w3-border-orange">References</h5>
+        <h6></h6>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+<script src="/static/JS/chart_data.js"> </script>
+</footer>
+</html>
