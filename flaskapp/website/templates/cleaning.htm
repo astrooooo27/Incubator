@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <title>Cleaning</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="refresh" content="5" > -->
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="static/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/main.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+    <body class="w3-light-grey", onload="update_values;">
+
+    <!-- Top container -->
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+      <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+      <span class="w3-bar-item w3-right"></span>
+    </div>
+
+    <!-- Sidebar/menu -->
+    <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+      <div class="w3-container">
+      <br>
+        <h5><b><i class="fa fa-dashboard"></i>Dashboard</b></h5>
+      </div>
+      <div class="w3-bar-block">
+        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-white w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+        <a href="/overview" class="w3-bar-item w3-button w3-padding"><i class="fa fa-calendar"></i> Incubator Period and Schedules</a>
+        <a href="/humid_temp" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bar-chart"></i> Humidity and Temperature</a>
+        <a href="/cand_turn" class="w3-bar-item w3-button w3-padding"><i class="fas fa-eye"></i> Candling and Turning</a>
+        <a href="#myheader" class="w3-bar-item w3-button w3-padding"><i class="fas fa-broom"></i> Cleaning</a>
+        <a href="/solar" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bolt"></i> Solar</a>
+        <a href="{{ url_for('login') }}" style="text-decoration: none;">Logout</a>
+      </div>
+    </nav>
+    <div class="container page-container">
+      {% with message = get_flashed_messages()  %}
+        {% if message %}
+          {% for msg in message %}
+            {% if category =='error' %}
+            <div class="alert alert-danger alter-dismissable fade show" role="alert">
+              {{ msg }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% else %}
+            <div class="alert alert-success alter-dismissable fade show" role="alert">
+              {{ msg }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    <div class="container">{% block content %} {% endblock %}</div>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:300px;margin-top:20px;">
+
+      <!-- Header -->
+      <header id="my-header" class="w3-container" style="padding-top:10px">
+        <h5><i class="fas fa-broom"></i><b> Cleaning</b></h5>
+      </header>
+      <script src=" "></script>
+      <script type="text/javascript"></script>
+    <div class="w3-row-padding w3-margin-bottom">
+        <div class="w3-quarter">
+            <div class="w3-container w3-white w3-hover-shadow w3-border-blue w3-bottombar w3-padding-16">
+                <div class="w3-left">
+                    <img id="UV" src="/static/images/UVoff.png">
+                </div>
+                <div class="w3-right">
+                    <h3 class="UV"></h3>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>UV</h4>
+            </div>
+        </div>
+        <div class="w3-quarter">
+            <div class="w3-container w3-white w3-hover-shadow w3-border-yellow w3-bottombar w3-padding-16">
+                <div class="w3-left">
+                    <img id="Buzzer" src="/static/images/buzzeroff.png">
+                </div>
+                <div class="w3-right">
+                    <h3 class="Buzzer"></h3>
+                </div>
+                <div class="w3-clear"></div>
+                <h4>Buzzer</h4>
+            </div>
+        </div>
+    </div>
+    <script>
+        function updateUV() {
+            $.ajax({
+                type: "GET",
+                url: "/UV",
+                success: function(response) {
+                    var UV = response.UV;
+                    document.querySelector('.UV').innerText = UV;
+                    var image = document.getElementById('UV');
+                    if (UV === 'ON') {
+                        image.src = "/static/images/UVon.png";
+                    } else if (UV === 'OFF') {
+                        image.src = "/static/images/UVoff.png";
+                    }
+                },
+                error: function(error) {
+                    console.error("Error getting UV status:", error);
+                }
+            });
+        }
+        updateUV();
+        setInterval(updateUV, 5000);
+        function updateBuzzer() {
+            $.ajax({
+                type: "GET",
+                url: "/Buzzer",
+                success: function(response) {
+                    var Buzzer = response.Buzzer;
+                    document.querySelector('.Buzzer').innerText = Buzzer;
+                    var image = document.getElementById('Buzzer');
+                    if (Buzzer === 'ON') {
+                        image.src = "/static/images/buzzeron.png";
+                    } else if (Buzzer === 'OFF') {
+                        image.src = "/static/images/buzzeroff.png";
+                    }
+                },
+                error: function(error) {
+                    console.error("Error getting Buzzer status:", error);
+                }
+            });
+        }
+        updateBuzzer();
+        setInterval(updateBuzzer, 5000);
+    </script>
+    <!-- Add a placeholder div where you want the table -->
+    <div class="w3-row-padding w3-margin-bottom">
+        <div id="cleaningTable">
+      </div>
+    </div>
+    <script>
+      // Function to update the cleaning table with specific rows
+      function updateCleaningTable() {
+        $.ajax({
+          type: "GET",
+          url: "/cleaning_data",
+          success: function (response) {
+            // Assuming response is an array of cleaning data
+            createTable(response);
+          },
+          error: function (error) {
+            console.error("Error getting cleaning data:", error);
+          }
+        });
+      }
+
+      // Function to create the table with specific rows
+      function createTable(cleaningData) {
+        var tableHtml = '<table border="1"><tr><th>Date</th><th>Time</th><th>Buzzer</th><th>UV</th></tr>';
+
+        // Loop through each row in reverse order
+        for (var i = cleaningData.length - 1; i >= 0; i--) {
+          var row = cleaningData[i];
+
+          // Check if the row number is a multiple of 50 (e.g., 50, 100, 150, etc.)
+          var rowNumber = i + 1;
+          if (rowNumber % 50 === 0) {
+            tableHtml += '<tr>';
+            tableHtml += `<td>${row.date}</td>`;
+            tableHtml += `<td>${row.time}</td>`;
+            tableHtml += `<td>${row.Buzzer}</td>`;
+            tableHtml += `<td>${row.UV}</td>`;
+            tableHtml += '</tr>';
+          }
+        }
+
+        tableHtml += '</table>';
+
+        // Replace the content of a div with the table
+        document.getElementById('cleaningTable').innerHTML = tableHtml;
+      }
+
+      // Call the function to update the table
+      updateCleaningTable();
+      setInterval(updateCleaningTable, 5000); // Refresh every 5 seconds
+    </script>
+
+</body>
+<footer>
+      <div class="w3-container w3-dark-grey w3-padding-32">
+        <div class="w3-row">
+          <div class="w3-container w3-third">
+            <h5 class="w3-bottombar w3-border-green">Create by</h5>
+           <h6>PCEIT-03-701E</h6>
+           <h7>Class of 2022-2023</h7>
+          </div>
+          <div class="w3-container w3-third">
+            <h5 class="w3-bottombar w3-border-red">Guided by</h5>
+            <h6>Master Engineer Ronel Paglomutan</h6>
+          </div>
+          <div class="w3-container w3-third">
+            <h5 class="w3-bottombar w3-border-orange">References</h5>
+            <h6></h6>
+          </div>
+        </div>
+      </div>
+    <script>
+    // Get the Sidebar
+    var mySidebar = document.getElementById("mySidebar");
+
+    // Get the DIV with overlay effect
+    var overlayBg = document.getElementById("myOverlay");
+
+    // Toggle between showing and hiding the sidebar, and add overlay effect
+    function w3_open() {
+      if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+      } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+      }
+    }
+
+    // Close the sidebar with the close button
+    function w3_close() {
+      mySidebar.style.display = "none";
+      overlayBg.style.display = "none";
+    }
+    </script>
+    <script src="/static/JS/chart_data.js"> </script>
+</footer>
+</html>
